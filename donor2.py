@@ -1,60 +1,60 @@
 import pygame
+import random
 
-def load_image(name):
-    fullname = f"{'sprits'}/{name}"
-    image = pygame.image.load(fullname)
-    return image
+WIDTH = 800
+HEIGHT = 650
+FPS = 30
+
+# Задаем цвета
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+BLUE = (0, 0, 255)
 
 
+class Player(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface((50, 50))
+        self.image.fill(GREEN)
+        self.rect = self.image.get_rect()
+        self.rect.center = (WIDTH / 2, HEIGHT / 2)
 
+    def update(self):
+        self.rect.x += 5
+        if self.rect.left > WIDTH:
+            self.rect.right = 0
+
+
+# Создаем игру и окно
 pygame.init()
-
-display_width = 1366
-display_height = 768
-
-
-gameDisplay = pygame.display.set_mode((display_width, display_height))
-pygame.display.set_caption('A bit Racey')
+pygame.mixer.init()
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("My Game")
 clock = pygame.time.Clock()
+all_sprites = pygame.sprite.Group()
+player = Player()
+all_sprites.add(player)
 
-background = pygame.image.load('sprits/hoese1_ru.png').convert()
-background = pygame.transform.smoothscale(background, gameDisplay.get_size())
-
-black = (0, 0, 0)
-white = (255, 255, 255)
-
-crashed = False
-carImg = pygame.image.load('sprits/fon.jpg')
-
-
-def car(x, y):
-    gameDisplay.blit(carImg, (x, y))
-
-
-x = round(display_width * 0.001)
-y = round(display_height * 0.001)
-
-run = True
-while run:
-    clock.tick(60)
-
-    # handle the events
+# Цикл игры
+running = True
+while running:
+    # Держим цикл на правильной скорости
+    clock.tick(FPS)
+    # Ввод процесса (события)
     for event in pygame.event.get():
+        # check for closing window
         if event.type == pygame.QUIT:
-            run = False
+            running = False
 
-    # update the game states and positions of objects
-    keys = pygame.key.get_pressed()
-    x += (keys[pygame.K_RIGHT] - keys[pygame.K_LEFT]) * 5
-    y += (keys[pygame.K_DOWN] - keys[pygame.K_UP]) * 5
-    x = x % gameDisplay.get_width()
-    y = y % gameDisplay.get_height()
+    # Обновление
+    all_sprites.update()
 
-    # draw the background
-    gameDisplay.blit(background, (0, 0))
-
-    # draw the entire scene
-    car(x, y)
-
-    # update the display
+    # Рендеринг
+    screen.fill(BLACK)
+    all_sprites.draw(screen)
+    # После отрисовки всего, переворачиваем экран
     pygame.display.flip()
+
+pygame.quit()

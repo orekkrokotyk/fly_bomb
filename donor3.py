@@ -2,13 +2,13 @@ import pygame
 
 
 def load_image(name):
-    fullname = f"{'data'}/{name}"
+    fullname = f"{'sprits'}/{name}"
     image = pygame.image.load(fullname)
     return image
 
 
 class Mountain(pygame.sprite.Sprite):
-    image = load_image("mountains.png")
+    image = load_image("house2_ru.png")
 
     def __init__(self):
         super().__init__(all_sprites)
@@ -20,8 +20,9 @@ class Mountain(pygame.sprite.Sprite):
         self.rect.bottom = height
 
 
+
 class Landing(pygame.sprite.Sprite):
-    image = load_image("pt.png")
+    image = load_image("bomb.png")
 
     def __init__(self, pos):
         super().__init__(all_sprites)
